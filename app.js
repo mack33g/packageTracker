@@ -171,9 +171,9 @@ function identifyCarrier(trackingId) {
 }
 
 async function checkPackage(package, carrier) {
-    const browser = await playwright.chromium.launch({ 
+    const browser = (appConfig.environment == 'test') ? await playwright.chromium.launch({ 
         // headless: false
-    });
+    }) : await playwright.chromium.launch({executablePath: '/usr/bin/chromium-browser' });
     const context = await browser.newContext(); 
     const page = await context.newPage();
     const url = carrier.url+package.trackingId;
