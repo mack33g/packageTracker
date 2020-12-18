@@ -1,0 +1,31 @@
+.package {
+    margin: 50px;
+    border-bottom: 1px solid grey;
+}
+
+form {
+    margin-top:20px;
+    margin-left:50px;
+}
+
+.container {
+    padding: 50px;
+    margin: auto;
+    text-align: center;
+    width: 300px;
+    margin-top: 200px;
+}
+
+.box_shadow {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 4px 0px; 
+}
+
+/* button:focus{background-color: white;} */
+
+.package button, .package form {
+    display: inline;
+}
+
+a#home {
+    text-decoration: none;
+}
