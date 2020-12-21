@@ -2,7 +2,6 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mysql = require("mysql");
-var localhost = "127.0.0.1";
 const appConfig = require("./config");
 const playwright = require("playwright");
 
