@@ -3,12 +3,12 @@
 <body>
     
     <div class="context">
-        <div><a href="/" id="home">🎁</a></div>
+        <div><a href="/" id="home">🔙</a></div>
         <div class="container" id="form">
             
             <form action="/addPackage" method="POST">
                 <input type="hidden" name="userName" value="<%= userName %>">
-                <input type="text" name="packageName" placeholder="What is the package?">
+                <input type="text" name="packageName" placeholder="Package Name">
                 <input type="text" name="trackingId" placeholder="Tracking ID">
                 <button>Add</button>
             </form>
@@ -20,8 +20,8 @@
                     <a href="<%= result.url %>"><%= result.trackingId %></a>
                     <form action="/removePackage" method="POST">
                         <input type="hidden" name="trackingId" value="<%= result.trackingId %>">
-                        <h3><%= result.status %></h3>
-                        <p><%= result.description %><p>
+                        <p><%= result.status %></p>
+                        <p class="description"><%= result.description %><p>
                         <button>Delete</button>
                     </form>
                     

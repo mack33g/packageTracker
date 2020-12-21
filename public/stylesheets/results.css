@@ -1,6 +1,6 @@
 
 .container {
-    padding: 50px;
+    padding: 20px;
     margin: auto;
     text-align: center;
     /* width: 300px; */
@@ -12,6 +12,7 @@ a#home {
     text-decoration: none;
     margin:30px;
     position: relative;
+    top: 10px;
     z-index: 100;
 }
 
@@ -26,6 +27,7 @@ a#home {
 
 body{
     font-family: 'Exo', sans-serif;
+    color: white;
 }
 
 
@@ -184,7 +186,7 @@ form {
   .container {
     /* max-width: 600px; */
     margin: 0 auto;
-    padding: 80px 0;
+    /* padding: 80px 0; */
     /* height: 400px; */
     text-align: center;
   }
@@ -201,8 +203,8 @@ h1 {
        -moz-appearance: none;
             appearance: none;
     outline: 0;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    background-color: rgba(255, 255, 255, 0.2);
+    border: 0px;
+    background-color: white;
     /* width: 250px; */
     border-radius: 3px;
     padding: 10px 15px;
@@ -212,23 +214,46 @@ h1 {
     z-index: 100;
     text-align: center;
     font-size: 14px;
-    color: white;
+    color: #c84e62;
     -webkit-transition-duration: 0.25s;
             transition-duration: 0.25s;
     font-weight: 300;
   }
-  button:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+
+  form button:hover {
+    background-color: #f5f7f9;
+    cursor: pointer;
   }
-  button:focus {
-    background-color: white;
-    /* width: 300px; */
-    color: #53e3a6;
+
+  .package form button {
+      margin-top: 10px;
   }
+
+  form p {
+      margin-top: 10px;
+  }
+
+.package {
+    height: 200px;
+    margin: 20px 0px 40px;
+    display: flex;
+    flex-direction: column;
+}
 
 .package form {
     display:flex;
     flex-direction:column;
+}
+
+.package a {
+    z-index: 100;
+    position: relative;
+    display: block;
+    margin: 10px 0px;
+}
+
+.package .description {
+    font-size: 0.7em;
 }
 
 ::placeholder {
@@ -236,6 +261,7 @@ h1 {
   }
 
   input {
+    margin: 10px 0;
     -webkit-appearance: none;
        -moz-appearance: none;
             appearance: none;
