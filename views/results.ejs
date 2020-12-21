@@ -1,21 +1,47 @@
 <%- include('partials/header.ejs'); %>
+<link rel="stylesheet" href="/stylesheets/results.css">
 <body>
-    <div><a href="/" id="home">🎁</a></div>
-<form action="/addPackage" method="POST">
-    <input type="hidden" name="userName" value="<%= userName %>">
-    <input type="text" name="packageName" placeholder="What is the package?">
-    <input type="text" name="trackingId" placeholder="Tracking ID">
-    <button>Add</button>
-</form>
-<% results.forEach((result) => { %>
-    <div class="package">
-        <h2><%= result.name %></h2>
-        <a href="<%= result.url %>"><%= result.trackingId %></a>
-        <form action="/removePackage" method="POST">
-            <input type="hidden" name="trackingId" value="<%= result.trackingId %>">
-            <button>Delete</button>
-        </form>
-        <h3><%= result.status %></h3>
-        <p><%= result.description %><p>
-    </div>
-<% }); %>
+    
+    <div class="context">
+        <div><a href="/" id="home">🎁</a></div>
+        <div class="container" id="form">
+            
+            <form action="/addPackage" method="POST">
+                <input type="hidden" name="userName" value="<%= userName %>">
+                <input type="text" name="packageName" placeholder="What is the package?">
+                <input type="text" name="trackingId" placeholder="Tracking ID">
+                <button>Add</button>
+            </form>
+        </div>
+        <div class="container">
+            <% results.forEach((result) => { %>
+                <div class="package">
+                    <h2><%= result.name %></h2>
+                    <a href="<%= result.url %>"><%= result.trackingId %></a>
+                    <form action="/removePackage" method="POST">
+                        <input type="hidden" name="trackingId" value="<%= result.trackingId %>">
+                        <h3><%= result.status %></h3>
+                        <p><%= result.description %><p>
+                        <button>Delete</button>
+                    </form>
+                    
+                </div>
+            <% }); %>
+        </div>
+</div>
+
+
+<div class="area" >
+        <ul class="circles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+        </ul>
+</div >

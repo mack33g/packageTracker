@@ -1,33 +1,18 @@
-.package {
-    margin: 50px;
-    border-bottom: 1px solid grey;
-}
-
-form {
-    margin-top:20px;
-    margin-left:50px;
-}
 
 .container {
     padding: 50px;
     margin: auto;
     text-align: center;
-    width: 300px;
-    margin-top: 200px;
+    /* width: 300px; */
+    /* margin-top: 200px; */
 }
 
-.box_shadow {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 4px 0px; 
-}
-
-/* button:focus{background-color: white;} */
-
-.package button, .package form {
-    display: inline;
-}
 
 a#home {
     text-decoration: none;
+    margin:30px;
+    position: relative;
+    z-index: 100;
 }
 
 /* Pure CSS Animated Background  https://codepen.io/mohaiman/pen/MQqMyo */
@@ -46,9 +31,11 @@ body{
 
 .context {
     width: 100%;
+    height: 100vh;
     position: absolute;
-    top:30vh;
-    
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
 }
 
 .context h1{
@@ -61,10 +48,16 @@ body{
     display: flex;
 }
 
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 
 .area{
-    background: #4e54c8;  
-    background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);  
+    background: #c84e62;  
+    background: -webkit-linear-gradient(left, #f77389, #c84e62);  
     width: 100%;
     height:100vh;
     
@@ -188,47 +181,11 @@ body{
 
 /* Calm breeze https://codepen.io/Lewitje/pen/BNNJjo */
 
-/* @font-face {
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 200;
-    src: url(https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
-  }
-  @font-face {
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 300;
-    src: url(https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-weight: 300;
-  }
-  body {
-    font-family: 'Source Sans Pro', sans-serif;
-    color: white;
-    font-weight: 300;
-  } */
-/* 
-  .wrapper {
-    background: #50a3a2;
-    background: -webkit-gradient(linear, left top, right bottom, from(#50a3a2), to(#53e3a6));
-    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 400px;
-    margin-top: -200px;
-    overflow: hidden;
-  } */
   .container {
-    max-width: 600px;
+    /* max-width: 600px; */
     margin: 0 auto;
     padding: 80px 0;
-    height: 400px;
+    /* height: 400px; */
     text-align: center;
   }
 h1 {
@@ -246,7 +203,7 @@ h1 {
     outline: 0;
     border: 1px solid rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.2);
-    width: 250px;
+    /* width: 250px; */
     border-radius: 3px;
     padding: 10px 15px;
     margin: 0 auto 10px auto;
@@ -254,7 +211,7 @@ h1 {
     position: relative;
     z-index: 100;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
     color: white;
     -webkit-transition-duration: 0.25s;
             transition-duration: 0.25s;
@@ -265,7 +222,47 @@ h1 {
   }
   button:focus {
     background-color: white;
-    width: 300px;
+    /* width: 300px; */
     color: #53e3a6;
   }
-  
+
+.package form {
+    display:flex;
+    flex-direction:column;
+}
+
+::placeholder {
+      color: white;
+  }
+
+  input {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    outline: 0;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.2);
+    /* width: 250px; */
+    border-radius: 3px;
+    padding: 10px 15px;
+    margin: 0 auto 10px auto;
+    display: block;
+    position: relative;
+    /* width: 100px; */
+    width: 40%;
+    z-index: 100;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    -webkit-transition-duration: 0.25s;
+            transition-duration: 0.25s;
+    font-weight: 300;
+  }
+  input:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  input:focus {
+    background-color: white;
+    /* width: 300px; */
+    color: #c84e62;
+  }
