@@ -1,14 +1,34 @@
 <%- include('partials/header.ejs'); %>
 <script type="text/javascript" src="/js/home.js"></script>
+
 <body>
+    <div class="context">
+            <h1>Package Tracker! 🎁</h1>
+            <div class="container">
+                <button onclick="location.href='/u/dana'" type="button">Pudding</button>
+                <button onclick="location.href='/u/leo'" type="button">大猫</button>
+            </div>
+    </div>
+    
+    
+    <div class="area" >
+            <ul class="circles">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+            </ul>
+    </div >
     <!-- <form action="/u/" method="POST">
         <input type="text" name="userName" placeholder="Which fatty are you?">
         <submit><button>Go</button></submit>
     </form> -->
-    <div id="landingPage" class="container box_shadow">
-        <h1>Package Tracker! 🎁</h1>
-        <button onclick="location.href='/u/dana'" type="button">Pudding</button>
-        <button onclick="location.href='/u/leo'" type="button">大猫</button>
-    </div>
+
 </body>
 </html>
