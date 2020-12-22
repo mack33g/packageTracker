@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mysql = require("mysql");
+// var gmail = require("./gmail");
 const appConfig = require("./config");
 const playwright = require("playwright");
 
@@ -33,10 +34,10 @@ const carrierConfigs = {
             index: [13]
         },
         pattern: [
-            /^(1Z)[0-9A-Z]{16}$/,
-            /^(T)+[0-9A-Z]{10}$/,
-            /^[0-9]{9}$/,
-            /^[0-9]{26}$/
+            '(1Z)[0-9A-Z]{16}',
+            '(T)+[0-9A-Z]{10}',
+            '[0-9]{9}',
+            '[0-9]{26}'
         ]
     },
     fedex: {
@@ -51,10 +52,10 @@ const carrierConfigs = {
             index: [0]
         },
         pattern: [
-            /^[0-9]{20}$/,
-            /^[0-9]{15}$/,
-            /^[0-9]{12}$/,
-            /^[0-9]{22}$/
+            '[0-9]{20}',
+            '[0-9]{15}',
+            '[0-9]{12}',
+            '[0-9]{22}'
         ]
     },
     usps: {
@@ -69,11 +70,11 @@ const carrierConfigs = {
             index: [0]
         },
         pattern: [
-            /^(94|93|92|94|95)[0-9]{20}$/,
-            /^(94|93|92|94|95)[0-9]{22}$/,
-            /^(70|14|23|03)[0-9]{14}$/,
-            /^(M0|82)[0-9]{8}$/,
-            /^([A-Z]{2})[0-9]{9}([A-Z]{2})$/
+            '(94|93|92|94|95)[0-9]{20}',
+            '(94|93|92|94|95)[0-9]{22}',
+            '(70|14|23|03)[0-9]{14}',
+            '(M0|82)[0-9]{8}',
+            '([A-Z]{2})[0-9]{9}([A-Z]{2})'
         ]
     }
 };
@@ -148,6 +149,10 @@ app.post("/removePackage", function (req, res) {
     })
 })
 
+app.get("/oauthcallback", function (req, res) {
+    console.log(req);
+})
+
 
 app.listen(3000, '0.0.0.0', function() {
     console.log("Server has started!");
@@ -162,7 +167,8 @@ function identifyCarrier(trackingId) {
     var carrierName = '';
     configs.forEach(carrier => {
         carrier.pattern.forEach(pattern => {
-            if (pattern.test(trackingId)) {
+            var regex = new RegExp('^'+pattern+'$');
+            if (regex.test(trackingId)) {
                 carrierName = carrier.name;
             };
         });
