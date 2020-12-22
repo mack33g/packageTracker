@@ -51,9 +51,11 @@ app.get("/u/:userName", function(req, res) {
             });
             var packageResults = {};
             packageResults = Promise.all(packages.map(async (package) => {
-                const packageResult = await checkPackage(package, carrierConfigs[package.carrier]);   
+                const packageResult = await checkPackage(package, carrierConfigs[package.carrier]);  
+                // console.log(packageResult); 
                 return packageResult;
             })).then(packageResults => {
+                console.log(packageResults);
                 res.render('results.ejs', {results: packageResults, userName: req.params.userName});
             });
         });
@@ -155,7 +157,7 @@ async function checkPackage(package, carrier) {
     const url = carrier.url+package.trackingId;
     await page.goto(url);
     await page.waitForFunction(carrier => {
-        const statusContainer = document.querySelectorAll(carrier.status.selector);
+        const statusContainer = document.querySelectorAll(carrier.readySelector);
         return statusContainer.length > 0;
     }, carrier);
 
@@ -175,7 +177,9 @@ async function checkPackage(package, carrier) {
     console.log('\n');
     // console.log(package.name);
     // console.log('Tracking ID: ' + package.trackingId);
+    // console.log('status:');
     // console.log(status);
+    // console.log('description:');
     // console.log(description);
 
     var result = {
@@ -194,9 +198,9 @@ async function checkPackage(package, carrier) {
 
     carrier.details.index.forEach(index => {
         // console.log(description[index]);
-        result.description += description[index];
+        result.description += description[index]+'<BR>';
     })
-
+    // console.log(result.description);
     await browser.close();
     return result;
 }; 

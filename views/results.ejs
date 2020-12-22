@@ -21,7 +21,7 @@
                     <form action="/removePackage" method="POST">
                         <input type="hidden" name="trackingId" value="<%= result.trackingId %>">
                         <p><%= result.status %></p>
-                        <p class="description"><%= result.description %><p>
+                        <p class="description"><%- result.description %><p>
                         <button>Delete</button>
                     </form>
                     

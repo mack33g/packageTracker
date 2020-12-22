@@ -2,13 +2,14 @@ const carrierConfigs = {
     ups: {
         name: 'ups',
         url: 'https://www.ups.com/WebTracking?loc=en_US&trackNums=',
+        readySelector: '.ups-card',
         status: {
             selector: '[id^="stApp_"]',
-            index: [12]
+            index: [7]
         },
         details: {
             selector: '[id^="stApp_"]',
-            index: [13]
+            index: [13,14]
         },
         // Making this a string pattern as opposed to a regex expression so that I can use this in regex
         // constructors like when looking for tracking numbers in gmail
@@ -22,6 +23,7 @@ const carrierConfigs = {
     fedex: {
         name: 'fedex',
         url: 'http://www.fedex.com/Tracking?&tracknumbers=',
+        readySelector: '.redesignSnapshotTVC.snapshotController_addr_label.dest',
         status: {
             selector: '.redesignSnapshotTVC.snapshotController_addr_label.dest',
             index: [0]
@@ -40,6 +42,7 @@ const carrierConfigs = {
     usps: {
         name: 'usps',
         url: 'https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=',
+        readySelector: '.expected_delivery',
         status: {
             selector: '.expected_delivery',
             index: [0]
