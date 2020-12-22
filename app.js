@@ -80,6 +80,7 @@ const carrierConfigs = {
 
 app.get("/", function(req, res) {
     res.render("home.ejs");
+    console.log(req.ip + " visited " + req.url);
 })
 
 app.post('/u/', function(req, res) {
@@ -89,7 +90,7 @@ app.post('/u/', function(req, res) {
 })
 
 app.get("/u/:userName", function(req, res) {
-    console.log("checking packages");
+    // console.log("checking packages");
     (async function checkPackages() {
         const packages = [];
         let sql = `SELECT * FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active = 1`;
@@ -113,6 +114,7 @@ app.get("/u/:userName", function(req, res) {
             });
         });
     })();
+    console.log(req.ip + " visited " + req.url);
 });
 
 app.post("/addPackage", function (req, res) {
@@ -196,8 +198,8 @@ async function checkPackage(package, carrier) {
         });
     });
     console.log('\n');
-    console.log(package.name);
-    console.log('Tracking ID: ' + package.trackingId);
+    // console.log(package.name);
+    // console.log('Tracking ID: ' + package.trackingId);
     // console.log(status);
     // console.log(description);
 
@@ -211,12 +213,12 @@ async function checkPackage(package, carrier) {
     };
 
     carrier.status.index.forEach(index => {
-        console.log(status[index]);
+        // console.log(status[index]);
         result.status += status[index];
     });
 
     carrier.details.index.forEach(index => {
-        console.log(description[index]);
+        // console.log(description[index]);
         result.description += description[index];
     })
 
