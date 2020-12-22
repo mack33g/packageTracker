@@ -33,6 +33,8 @@ const carrierConfigs = {
             selector: '[id^="stApp_"]',
             index: [13]
         },
+        // Making this a string pattern as opposed to a regex expression so that I can use this in regex
+        // constructors like when looking for tracking numbers in gmail
         pattern: [
             '(1Z)[0-9A-Z]{16}',
             '(T)+[0-9A-Z]{10}',
