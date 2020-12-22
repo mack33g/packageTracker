@@ -12,7 +12,7 @@ const carrierConfigs = {
         },
         // Making this a string pattern as opposed to a regex expression so that I can use this in regex
         // constructors like when looking for tracking numbers in gmail
-        pattern: [
+        patterns: [
             '(1Z)[0-9A-Z]{16}',
             '(T)+[0-9A-Z]{10}',
             '[0-9]{9}',
@@ -30,7 +30,7 @@ const carrierConfigs = {
             selector: '.redesignSnapshotTVC.snapshotController_date.dest',
             index: [0]
         },
-        pattern: [
+        patterns: [
             '[0-9]{20}',
             '[0-9]{15}',
             '[0-9]{12}',
@@ -48,7 +48,7 @@ const carrierConfigs = {
             selector: '.delivery_status',
             index: [0]
         },
-        pattern: [
+        patterns: [
             '(94|93|92|94|95)[0-9]{20}',
             '(94|93|92|94|95)[0-9]{22}',
             '(70|14|23|03)[0-9]{14}',

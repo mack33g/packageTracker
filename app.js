@@ -105,11 +105,12 @@ app.listen(3000, '0.0.0.0', function() {
 // Functions
 
 function identifyCarrier(trackingId) {
-    const configs = Object.values(carrierConfigs);
+    // Get each of the top level objects in carrierConfigs (ups, fedex, usps)
+    const carriers = Object.values(carrierConfigs);
     
     var carrierName = '';
-    configs.forEach(carrier => {
-        carrier.pattern.forEach(pattern => {
+    carriers.forEach(carrier => {
+        carrier.patterns.forEach(pattern => {
             var regex = new RegExp('^'+pattern+'$');
             if (regex.test(trackingId)) {
                 carrierName = carrier.name;
@@ -119,6 +120,8 @@ function identifyCarrier(trackingId) {
     console.log(carrierName);
     return carrierName;
 }
+
+// identifyCarrier(781126852060);
 
 async function checkPackage(package, carrier) {
     const browser = (appConfig.environment == 'mac') ? await playwright.chromium.launch({ 
