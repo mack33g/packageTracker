@@ -4,6 +4,7 @@ var parseMessage = require('gmail-api-parse-message');
 const {google} = require('googleapis');
 const { match } = require('assert');
 const carrierConfigs = require('./carrierConfigs');
+var uniqueTrackingNumbers;
 
 // callback packages.leogong.net/oauthcallback
 
@@ -112,6 +113,7 @@ async function returnTrackingNumbers(auth) {
           };
           uniqueTrackingNumbers = [...new Set(trackingNumbers)];
           console.log(uniqueTrackingNumbers);
+          module.exports = uniqueTrackingNumbers;
           return uniqueTrackingNumbers;
         } else {
           console.log('No messages found.');

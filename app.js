@@ -104,6 +104,29 @@ app.listen(3000, '0.0.0.0', function() {
 
 // Functions
 
+// async function findGmailTrackingIds() {
+//     const trackingIds = require("./gmail");
+//     return trackingIds;
+//     // trackingIds().then(trackingIds => {
+//         let sql = `SELECT * FROM packages WHERE trackingId IN ('${trackingIds}')`;
+//         // let sql = "SELECT * FROM packages WHERE trackingId IN ('781626367100','781126852060')"
+//         // console.log(sql);
+//         con.query(sql, (error, results, fields) => {
+//             if (error) {
+//                 return console.error(error.message);
+//             }
+//             // console.log(results);
+//         })
+//     // });
+
+
+    
+// }
+
+// // (async function() {
+//     let test = findGmailTrackingIds();
+// // });
+
 function identifyCarrier(trackingId) {
     // Get each of the top level objects in carrierConfigs (ups, fedex, usps)
     const carriers = Object.values(carrierConfigs);
