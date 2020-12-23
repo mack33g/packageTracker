@@ -2,6 +2,7 @@
 config.js
 token.json
 credentials.json
+test.js
 
 # Logs
 logs
