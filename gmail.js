@@ -4,7 +4,18 @@ var parseMessage = require('gmail-api-parse-message');
 const {google} = require('googleapis');
 const { match } = require('assert');
 const carrierConfigs = require('./carrierConfigs');
+const { connect } = require('http2');
 var uniqueTrackingNumbers;
+const userName = 'leo';
+var mysql = require("mysql");
+const appConfig = require("./config");
+const { resolve } = require('path');
+var con = mysql.createConnection({
+  host: appConfig.host,
+  user: appConfig.user,
+  password: appConfig.password,
+  database: appConfig.database
+});
 
 // callback packages.leogong.net/oauthcallback
 
@@ -23,15 +34,17 @@ const TOKEN_PATH = 'token.json';
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 
-function returnTrackingNumbers(auth) {
+function returnTrackingNumbers(auth, callback) {
     const gmail = google.gmail({version: 'v1', auth});
     gmail.users.messages.list({
         userId: 'me',
         maxResults: 5,
         q: "tracking number shipped"
     }, async function (err, res) {
-        if (err)
-          return console.log('The API returned an error: ' + err);
+        if (err) {
+          console.log('The API returned an error: ' + err);
+          return callback('The API returned an error: ' + err);
+        }
         const emails = res.data.messages;
         var trackingNumbers = [];
         if (emails && emails.length) {
@@ -45,19 +58,22 @@ function returnTrackingNumbers(auth) {
             // Other useful results that get outputted by parseMessage:
             // snippet, headers.date, headers.from, headers.subject, textHtml, textPlain
             parsedMessage = parseMessage(messageDetails.data);
-            // console.log(parsedMessage.headers.subject);
+            
             // console.log(parsedMessage.snippet);
             const results = findTrackingNumber(parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml);
             if (results.length) {
               trackingNumbers = trackingNumbers.concat(results);
+              console.log(parsedMessage.headers.subject);
+              console.log(results);
               // console.log(trackingNumbers);
             }
             // console.log("\n");
           };
           uniqueTrackingNumbers = [...new Set(trackingNumbers)];
-          console.log(uniqueTrackingNumbers);
-          return(uniqueTrackingNumbers);
+          // console.log(uniqueTrackingNumbers);
+          callback(null, uniqueTrackingNumbers);
         } else {
+          callback('No messages found', null);
           console.log('No messages found.');
         }
       });
@@ -101,32 +117,34 @@ function findTrackingNumber(emailBody) {
 // Load client secrets from a local file.
 let gmailResults = new Promise((resolve, reject) => { 
   fs.readFile('./credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
+    if (err) {
+      reject('Error loading client secret file:', err);
+      return;
+    }
     // Authorize a client with credentials, then call the Gmail API.
-    // let results = new Promise((resolve, reject) => {
-      authorize(JSON.parse(content), returnTrackingNumbers)
-    // };
-    resolve(results);
-    // setTimeout(function(){
-    //   return('Success!');
-    // }, 2000);
+    const rtnCallback = (err, result) => err ? reject(err) : resolve(result);
+    const authorizeCallback = oAuth2Client => returnTrackingNumbers(oAuth2Client, rtnCallback);
+    authorize(JSON.parse(content), authorizeCallback);
   });
 });
 
 // Update the packages database with the unique tracking ids
-// Set them with status = 2 which stands for unprocessed
+// Set them with active = null which stands for unprocessed
 // For app.js when opening /u/username: Update tracking ids table
 // When it's up to date, load the page
 // function updateTrackingIds(user) {
   // TO DO: convert user to gmail userid
   gmailResults.then(trackingNumbers => {
-      // Arrow notation returns the resolution
-      console.log('test');
-      console.log(trackingNumbers);
-  })
-  // let test = await gmailResults;
-  // console.log(test);
-// }
+    let trackingValues = trackingNumbers.map(x => ['leo', x]);
+    let sql = `INSERT INTO packages (userName, trackingId) VALUES ? ON DUPLICATE KEY UPDATE status = status`;
+    let query = con.query(sql, [trackingValues], function(err) {
+      if(err) throw err;
+      con.end();
+    }) 
+    // console.log(trackingValues);
+    console.log(query.sql);
+    // resolve("done");
+  });
 
 // module.exports = updateTrackingIds();
 
