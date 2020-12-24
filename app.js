@@ -70,7 +70,7 @@ app.post("/addPackage", function (req, res) {
     let trackingId = mysql.escape(req.body.trackingId);
     let carrier = mysql.escape(identifyCarrier(req.body.trackingId));
     // let carrier = mysql.escape(req.body.carrier);
-    let sql = `INSERT INTO packages (userName, packageName, trackingId, carrier) VALUES (${userName}, ${packageName}, ${trackingId}, ${carrier}) ON DUPLICATE KEY UPDATE active = 1, updated = CURRENT_TIMESTAMP()`;
+    let sql = `INSERT INTO packages (userName, packageName, trackingId, carrier, active) VALUES (${userName}, ${packageName}, ${trackingId}, ${carrier}, 1) ON DUPLICATE KEY UPDATE active = 1, updated = CURRENT_TIMESTAMP()`;
     console.log(sql);
     con.query(sql, (error, results, fields) => {
         if (error) {
