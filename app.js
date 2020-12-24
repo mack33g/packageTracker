@@ -36,7 +36,7 @@ app.post('/u/', function(req, res) {
 app.get("/u/:userName", function(req, res) {
     // console.log("checking packages");
     (async function checkPackages() {
-        const packages = [];
+        var packages = [];
         let sql = `SELECT * FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active = 1`;
         con.query(sql, (error, results, fields) => {
             if (error) {
@@ -56,12 +56,51 @@ app.get("/u/:userName", function(req, res) {
                 return packageResult;
             })).then(packageResults => {
                 console.log(packageResults);
-                res.render('results.ejs', {results: packageResults, userName: req.params.userName});
+                let sql = `SELECT COUNT (*) as numSuggestedPackages FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active IS NULL`;
+                con.query(sql, (error, queryResults, fields) => {
+                    if (error) {
+                        return console.error(error.message);
+                    }
+                    let numSuggestedPackages = queryResults[0].numSuggestedPackages;
+                    console.log(numSuggestedPackages);
+                    // suggestedPackages = JSON.parse(JSON.stringify(suggestedPackages[0].trackingId));
+                    // console.log(suggestedPackages);
+                    res.render('results.ejs', {results: packageResults, userName: req.params.userName, numSuggestedPackages: numSuggestedPackages});
+                })
+                
             });
         });
     })();
     console.log(req.ip + " visited " + req.url);
 });
+
+app.get("/u/:userName/suggestedPackages", function(req, res) {
+    let sql = `SELECT trackingId FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active IS NULL`;
+    con.query(sql, (error, suggestedPackages, fields) => {
+        if (error) {
+            return console.error(error.message);
+        }
+        // console.log(JSON.stringify(suggestedPackages));
+        suggestedPackages = suggestedPackages.map(rowDataPacket => new TrackingInfo(rowDataPacket.trackingId));
+        console.log(suggestedPackages);
+        // 
+        res.render('suggestedPackages.ejs', {userName: req.params.userName, suggestedPackages: suggestedPackages});
+    });
+    console.log(req.ip + " visited " + req.url);
+})
+
+app.get("/u/:userName/rejectSuggestedPackage/:trackingId", function(req, res) {
+    console.log(req.ip + " visited " + req.url);
+    let sql = `UPDATE packages SET active=3 WHERE userName = ${mysql.escape(req.params.userName)} AND trackingId = ${mysql.escape(req.params.trackingId)} LIMIT 1`;
+    con.query(sql, (error, results, fields) => {
+        if (error) {
+            return console.error(error.message);
+        }
+        console.log(sql);
+        res.redirect(`/u/${req.params.userName}/suggestedPackages`);
+    });
+    
+})
 
 app.post("/addPackage", function (req, res) {
     console.log("adding a package");
@@ -70,13 +109,13 @@ app.post("/addPackage", function (req, res) {
     let trackingId = mysql.escape(req.body.trackingId);
     let carrier = mysql.escape(identifyCarrier(req.body.trackingId));
     // let carrier = mysql.escape(req.body.carrier);
-    let sql = `INSERT INTO packages (userName, packageName, trackingId, carrier, active) VALUES (${userName}, ${packageName}, ${trackingId}, ${carrier}, 1) ON DUPLICATE KEY UPDATE active = 1, updated = CURRENT_TIMESTAMP()`;
+    let sql = `INSERT INTO packages (userName, packageName, trackingId, carrier, active) VALUES (${userName}, ${packageName}, ${trackingId}, ${carrier}, 1) ON DUPLICATE KEY UPDATE packageName = ${packageName}, carrier = ${carrier}, active = 1, updated = CURRENT_TIMESTAMP()`;
     console.log(sql);
     con.query(sql, (error, results, fields) => {
         if (error) {
             return console.error(error.message);
         }
-        res.redirect("/u/"+req.body.userName);
+        res.redirect('back');
     });
 });
 
@@ -204,6 +243,13 @@ async function checkPackage(package, carrier) {
     await browser.close();
     return result;
 }; 
+
+function TrackingInfo(trackingId) {
+    this.trackingId = trackingId;
+    this.carrier = identifyCarrier(trackingId);
+    let carrier = this.carrier;
+    this.url = carrierConfigs[carrier].url+trackingId;
+}
 
 function sanitize(string) {
     return string.toLowerCase();

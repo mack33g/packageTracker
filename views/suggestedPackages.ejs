@@ -1,0 +1,39 @@
+<%- include('partials/header.ejs'); %>
+<link rel="stylesheet" href="/stylesheets/results.css">
+<body>
+    
+    <div class="context">
+        <div><a href="/" id="home">🔙</a></div>
+        <div class="container">
+            <% suggestedPackages.forEach((suggestedPackage) => { %>
+                    <p>
+                        <a href="<%= suggestedPackage.url %>" target="_blank">
+                            <%= suggestedPackage.trackingId %>
+                        </a>
+                        <a href="/u/<%= userName %>/rejectSuggestedPackage/<%= suggestedPackage.trackingId %>">✖️</a>
+                        <form action="/addPackage" method="POST">
+                            <input type="hidden" name="userName" value="<%= userName %>">
+                            <input type="text" class="tempForDana" name="packageName" placeholder="Package Name">
+                            <input type="hidden" name="trackingId" value="<%= suggestedPackage.trackingId %>">
+                            <button>Add</button>
+                        </form>
+                    </p>
+            <% }); %>
+        </div>
+</div>
+
+
+<div class="area" >
+        <ul class="circles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+        </ul>
+</div >

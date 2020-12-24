@@ -32,6 +32,18 @@ body{
     color: white;
 }
 
+a {
+    text-decoration: none;
+    color: white;
+}
+
+#suggestedPackages {
+    font-size: 12px;
+}
+
+.tempForDana {
+    width: 300px;
+}
 
 .context {
     width: 100%;

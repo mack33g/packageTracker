@@ -5,13 +5,15 @@
     <div class="context">
         <div><a href="/" id="home">🔙</a></div>
         <div class="container" id="form">
-            
             <form action="/addPackage" method="POST">
                 <input type="hidden" name="userName" value="<%= userName %>">
                 <input type="text" name="packageName" placeholder="Package Name">
                 <input type="text" name="trackingId" placeholder="Tracking ID">
                 <button>Add</button>
             </form>
+            <% if (numSuggestedPackages > 0) { %>
+            <div id="suggestedPackages"><a href="/u/<%= userName %>/suggestedPackages">We found <%= numSuggestedPackages %> potentially new packages for you</a></div>
+            <% }; %>
         </div>
         <div class="container">
             <% results.forEach((result) => { %>
