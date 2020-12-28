@@ -15,7 +15,7 @@
             <div id="suggestedPackages"><a href="/u/<%= userName %>/suggestedPackages">We found <%= numSuggestedPackages %> potentially new packages for you</a></div>
             <% }; %>
         </div>
-        <div class="container">
+        <div class="container" id="packages">
             <% results.forEach((result) => { %>
                 <div class="package">
                     <h2><%= result.name %></h2>

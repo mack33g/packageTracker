@@ -9,6 +9,14 @@
     /* margin-top: 200px; */
 }
 
+#packages {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
 
 a#home {
     text-decoration: none;
