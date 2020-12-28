@@ -6,7 +6,7 @@ const { match } = require('assert');
 const carrierConfigs = require('./carrierConfigs');
 const { connect } = require('http2');
 var uniqueTrackingNumbers;
-const userName = 'dana';
+// const userName = 'leo';
 var mysql = require("mysql");
 const appConfig = require("./config");
 const { resolve } = require('path');
@@ -28,6 +28,58 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
+
+
+
+
+function suggestNewPackages(userName) {
+  // Load client secrets from a local file.
+  // console.log("checking");
+let gmailResults = new Promise((resolve, reject) => { 
+  fs.readFile('./credentials.json', (err, content) => {
+    if (err) {
+      reject('Error loading client secret file:', err);
+      return;
+    }
+    // Authorize a client with credentials, then call the Gmail API.
+    const rtnCallback = (err, result) => err ? reject(err) : resolve(result);
+    const authorizeCallback = oAuth2Client => returnTrackingNumbers(oAuth2Client, rtnCallback);
+    authorize(JSON.parse(content), userName, authorizeCallback);
+  });
+});
+
+// Update the packages database with the unique tracking ids
+// Set them with active = null which stands for unprocessed
+// For app.js when opening /u/username: Update tracking ids table
+// When it's up to date, load the page
+// function updateTrackingIds(user) {
+  // TO DO: convert user to gmail userid
+  gmailResults.then(trackingNumbers => {
+    let trackingValues = trackingNumbers.map(x => [userName, x]);
+    let sql = `INSERT INTO packages (userName, trackingId) VALUES ? ON DUPLICATE KEY UPDATE status = status`;
+    let query = con.query(sql, [trackingValues], function(err) {
+      if(err) throw err;
+      con.end();
+    }) 
+    // console.log(trackingValues);
+    console.log(query.sql);
+    resolve("done");
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Lists the uniqueTrackingNumbers in the user's account.
@@ -121,37 +173,7 @@ function findTrackingNumber(emailBody) {
     return results;
 }
 
-// Load client secrets from a local file.
-let gmailResults = new Promise((resolve, reject) => { 
-  fs.readFile('./credentials.json', (err, content) => {
-    if (err) {
-      reject('Error loading client secret file:', err);
-      return;
-    }
-    // Authorize a client with credentials, then call the Gmail API.
-    const rtnCallback = (err, result) => err ? reject(err) : resolve(result);
-    const authorizeCallback = oAuth2Client => returnTrackingNumbers(oAuth2Client, rtnCallback);
-    authorize(JSON.parse(content), authorizeCallback);
-  });
-});
 
-// Update the packages database with the unique tracking ids
-// Set them with active = null which stands for unprocessed
-// For app.js when opening /u/username: Update tracking ids table
-// When it's up to date, load the page
-// function updateTrackingIds(user) {
-  // TO DO: convert user to gmail userid
-  gmailResults.then(trackingNumbers => {
-    let trackingValues = trackingNumbers.map(x => [userName, x]);
-    let sql = `INSERT INTO packages (userName, trackingId) VALUES ? ON DUPLICATE KEY UPDATE status = status`;
-    let query = con.query(sql, [trackingValues], function(err) {
-      if(err) throw err;
-      con.end();
-    }) 
-    // console.log(trackingValues);
-    console.log(query.sql);
-    resolve("done");
-  });
 
 // module.exports = updateTrackingIds();
 
@@ -163,7 +185,7 @@ let gmailResults = new Promise((resolve, reject) => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials, userName, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -171,7 +193,8 @@ function authorize(credentials, callback) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
+    console.log(token);
+    oAuth2Client.setCredentials(JSON.parse(token)[userName]);
     callback(oAuth2Client);
   });
 }

@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mysql = require("mysql");
-// var gmail = require("./gmail");
+var gmail = require("./gmail");
 const appConfig = require("./config");
 const playwright = require("playwright");
 const carrierConfigs = require("./carrierConfigs");
@@ -38,6 +38,7 @@ app.get("/u/:userName", function(req, res) {
     (async function checkPackages() {
         var packages = [];
         let sql = `SELECT * FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active = 1`;
+        gmail.suggestNewPackages();
         con.query(sql, (error, results, fields) => {
             if (error) {
                 return console.error(error.message);
