@@ -2,10 +2,11 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mysql = require("mysql");
-var gmail = require("./gmail");
+var suggestNewPackages = require("./gmail");
 const appConfig = require("./config");
 const playwright = require("playwright");
 const carrierConfigs = require("./carrierConfigs");
+const SHOWBROWSER = !false;
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -38,7 +39,7 @@ app.get("/u/:userName", function(req, res) {
     (async function checkPackages() {
         var packages = [];
         let sql = `SELECT * FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active = 1`;
-        gmail.suggestNewPackages();
+        // suggestNewPackages(sanitize(req.params.userName));
         con.query(sql, (error, results, fields) => {
             if (error) {
                 return console.error(error.message);
@@ -189,7 +190,7 @@ function identifyCarrier(trackingId) {
 
 async function checkPackage(package, carrier) {
     const browser = (appConfig.environment == 'mac') ? await playwright.chromium.launch({ 
-        // headless: false
+        headless: false
     }) : await playwright.chromium.launch({executablePath: '/usr/bin/chromium-browser' });
     const context = await browser.newContext(); 
     const page = await context.newPage();
@@ -199,6 +200,24 @@ async function checkPackage(package, carrier) {
         const statusContainer = document.querySelectorAll(carrier.readySelector);
         return statusContainer.length > 0;
     }, carrier);
+    await page.waitForFunction(carrier => {
+        const statusContainer = document.querySelectorAll(carrier.readySelector);
+        // after 4 seconds
+        // call a function that returns true
+        // function timeOut(callback) {
+        //     window.setTimeout(function() {
+        //         callback();
+        //     }, 1000);
+        // }
+
+        // timeOut(function() { console.log('test');});
+
+        return statusContainer.length > 0;
+        
+    }, carrier);
+    // await page.waitForLoadState('domcontentloaded');
+    // await page.waitForTimeout(5000);
+
 
     const status = await page.$$eval(carrier.status.selector, (headers) => {
         return headers.map(header => {

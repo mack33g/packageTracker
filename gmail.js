@@ -31,8 +31,7 @@ const TOKEN_PATH = 'token.json';
 
 
 
-
-function suggestNewPackages(userName) {
+module.exports = function suggestNewPackages(userName) {
   // Load client secrets from a local file.
   // console.log("checking");
 let gmailResults = new Promise((resolve, reject) => { 
@@ -193,7 +192,7 @@ function authorize(credentials, userName, callback) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
-    console.log(token);
+    // console.log(userName);
     oAuth2Client.setCredentials(JSON.parse(token)[userName]);
     callback(oAuth2Client);
   });
@@ -229,3 +228,5 @@ function getNewToken(oAuth2Client, callback) {
     });
   });
 }
+
+// module.exports.suggestNewPackages = suggestNewPackages();

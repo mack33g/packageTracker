@@ -61,7 +61,7 @@ const carrierConfigs = {
     },
     amazon: {
         name: 'amazon',
-        readySelector: '.lastReached .milestone-primaryMessage',
+        readySelector: '#primaryStatus',
         status: {
             selector: '#primaryStatus',
             index: [0]
