@@ -134,7 +134,9 @@ app.post("/removePackage", function (req, res) {
 })
 
 app.get("/oauthcallback", function (req, res) {
-    console.log(req);
+    console.log("Token saved successfully");
+    res.send(req.params.code);
+    console.log(req.query);
 })
 
 
@@ -171,21 +173,18 @@ app.listen(appConfig.port, '0.0.0.0', function() {
 function identifyCarrier(trackingId) {
     // Get each of the top level objects in carrierConfigs (ups, fedex, usps)
     const carriers = Object.values(carrierConfigs);
-    
     var carrierName = '';
     carriers.forEach(carrier => {
         carrier.patterns.forEach(pattern => {
-            var regex = new RegExp('^'+pattern+'$');
+            var regex = new RegExp('^'+pattern+'$','i');
+            console.log(regex);
             if (regex.test(trackingId)) {
                 carrierName = carrier.name;
             };
         });
     });
-    console.log(carrierName);
     return carrierName;
 }
-
-// identifyCarrier(781126852060);
 
 async function checkPackage(package, carrier) {
     const browser = (appConfig.environment == 'mac') ? await playwright.chromium.launch({ 
@@ -251,8 +250,13 @@ async function checkPackage(package, carrier) {
 function TrackingInfo(trackingId) {
     this.trackingId = trackingId;
     this.carrier = identifyCarrier(trackingId);
+    // console.log(this.trackingId);
+    // console.log(this.carrier);
     let carrier = this.carrier;
+    // Can get rid of this condition if tracking info is always created with
+    // if (this.carrier != null) {
     this.url = this.carrier == 'amazon' ? trackingId : carrierConfigs[carrier].url+trackingId;
+    // }
 }
 
 function sanitize(string) {

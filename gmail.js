@@ -6,7 +6,7 @@ const { match } = require('assert');
 const carrierConfigs = require('./carrierConfigs');
 const { connect } = require('http2');
 var uniqueTrackingNumbers;
-const userName = 'leo';
+const userName = 'dana';
 var mysql = require("mysql");
 const appConfig = require("./config");
 const { resolve } = require('path');
@@ -139,7 +139,7 @@ let gmailResults = new Promise((resolve, reject) => {
 // function updateTrackingIds(user) {
   // TO DO: convert user to gmail userid
   gmailResults.then(trackingNumbers => {
-    let trackingValues = trackingNumbers.map(x => ['leo', x]);
+    let trackingValues = trackingNumbers.map(x => [userName, x]);
     let sql = `INSERT INTO packages (userName, trackingId) VALUES ? ON DUPLICATE KEY UPDATE status = status`;
     let query = con.query(sql, [trackingValues], function(err) {
       if(err) throw err;
@@ -149,7 +149,7 @@ let gmailResults = new Promise((resolve, reject) => {
     console.log(query.sql);
     resolve("done");
   });
-  
+
 // module.exports = updateTrackingIds();
 
 // ********** AUTH STUFF **********
