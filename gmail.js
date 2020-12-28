@@ -39,7 +39,7 @@ function returnTrackingNumbers(auth, callback) {
     gmail.users.messages.list({
         userId: 'me',
         maxResults: 5,
-        q: "tracking number shipped"
+        q: "(tracking order shipped)  OR (amazon.com tracking shipped)"
     }, async function (err, res) {
         if (err) {
           console.log('The API returned an error: ' + err);
@@ -59,11 +59,14 @@ function returnTrackingNumbers(auth, callback) {
             // snippet, headers.date, headers.from, headers.subject, textHtml, textPlain
             parsedMessage = parseMessage(messageDetails.data);
             
-            // console.log(parsedMessage.snippet);
+            console.log("Email that matched gmail search: " + parsedMessage.headers.subject);
+            fs.appendFile('parsedEmails', (parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml), function(err) {
+              if(err) throw err;
+            });
             const results = findTrackingNumber(parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml);
             if (results.length) {
               trackingNumbers = trackingNumbers.concat(results);
-              console.log(parsedMessage.headers.subject);
+              // console.log(parsedMessage.headers.subject);
               console.log(results);
               // console.log(trackingNumbers);
             }
@@ -93,13 +96,14 @@ function findTrackingNumber(emailBody) {
             // string isn't bookended by numbers - that way you don't end up finding multiple matches
             // e.g. if you're looking for 4 numbers, and there is an 8 digit string, you don't return 5 matches
             const regex = new RegExp('\\D' + pattern + '\\D', 'gi');
+            // console.log(regex);
             // The search will return a positive match if the entire string is letters
             // But we know those aren't real tracking numbers so we exclude them.
             const onlyLetters = new RegExp('^[A-Z]+$', 'i');
             // Declare the variables for operating regex
             var result, match;
             // Iterate through the emailBody and look for the regex pattern of the tracking number
-            while ((match = regex.exec(emailBody))) {
+            while ((match = regex.exec(emailBody))) {  
                 // If you find it, trim up the non numbers that are bookending the match.
                 result = match[0].substring(1,match[0].length-1);
                 // And if it isn't just all letters, add it to the results array
@@ -143,9 +147,9 @@ let gmailResults = new Promise((resolve, reject) => {
     }) 
     // console.log(trackingValues);
     console.log(query.sql);
-    // resolve("done");
+    resolve("done");
   });
-
+  
 // module.exports = updateTrackingIds();
 
 // ********** AUTH STUFF **********

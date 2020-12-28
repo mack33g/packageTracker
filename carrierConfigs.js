@@ -58,6 +58,22 @@ const carrierConfigs = {
             '(M0|82)[0-9]{8}',
             '([A-Z]{2})[0-9]{9}([A-Z]{2})'
         ]
+    },
+    amazon: {
+        name: 'amazon',
+        readySelector: '#primaryStatus',
+        status: {
+            selector: '#primaryStatus',
+            index: [0]
+        },
+        details: {
+            selector: '.milestone-primaryMessage',
+            index: [0]
+        },
+        patterns: [
+            'https:.*scr_pt_tp_t'
+            // "scr_pt_track\"",
+        ]
     }
 };
 

@@ -19,7 +19,7 @@
             <% results.forEach((result) => { %>
                 <div class="package">
                     <h2><%= result.name %></h2>
-                    <a href="<%= result.url %>"><%= result.trackingId %></a>
+                    <a href="<%= result.url %>"><%= result.trackingId.length > 50 ? "Amazon package" : result.trackingId %></a>
                     <form action="/removePackage" method="POST">
                         <input type="hidden" name="trackingId" value="<%= result.trackingId %>">
                         <p><%= result.status %></p>

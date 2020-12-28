@@ -193,7 +193,7 @@ async function checkPackage(package, carrier) {
     }) : await playwright.chromium.launch({executablePath: '/usr/bin/chromium-browser' });
     const context = await browser.newContext(); 
     const page = await context.newPage();
-    const url = carrier.url+package.trackingId;
+    const url = package.carrier == 'amazon' ? package.trackingId : carrier.url+package.trackingId;
     await page.goto(url);
     await page.waitForFunction(carrier => {
         const statusContainer = document.querySelectorAll(carrier.readySelector);
@@ -210,6 +210,7 @@ async function checkPackage(package, carrier) {
     const description = await page.$$eval(carrier.details.selector, (headers) => {
         return headers.map(header => {
             const text = header.innerText.trim();
+            console.log(text);
             return text;
         });
     });
@@ -237,7 +238,10 @@ async function checkPackage(package, carrier) {
 
     carrier.details.index.forEach(index => {
         // console.log(description[index]);
-        result.description += description[index]+'<BR>';
+        if (description[index]) {
+
+            result.description += description[index]+'<BR>';
+        }
     })
     // console.log(result.description);
     await browser.close();
@@ -248,7 +252,7 @@ function TrackingInfo(trackingId) {
     this.trackingId = trackingId;
     this.carrier = identifyCarrier(trackingId);
     let carrier = this.carrier;
-    this.url = carrierConfigs[carrier].url+trackingId;
+    this.url = this.carrier == 'amazon' ? trackingId : carrierConfigs[carrier].url+trackingId;
 }
 
 function sanitize(string) {
