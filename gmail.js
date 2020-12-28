@@ -17,6 +17,9 @@ var con = mysql.createConnection({
   database: appConfig.database
 });
 
+const SEARCHTERMS = '{(tracking order shipped) (amazon.com tracking shipped) (fedex)}';
+const MAX_RESULTS = 5;
+
 // callback packages.leogong.net/oauthcallback
 
 // If modifying these scopes, delete token.json.
@@ -38,8 +41,8 @@ function returnTrackingNumbers(auth, callback) {
     const gmail = google.gmail({version: 'v1', auth});
     gmail.users.messages.list({
         userId: 'me',
-        maxResults: 5,
-        q: "(tracking order shipped)  OR (amazon.com tracking shipped)"
+        maxResults: MAX_RESULTS,
+        q: SEARCHTERMS
     }, async function (err, res) {
         if (err) {
           console.log('The API returned an error: ' + err);
