@@ -26,6 +26,73 @@ a#home {
     z-index: 100;
 }
 
+/* For Suggested Packages */
+
+.suggestedRow {
+    width: 80vw;
+    border-bottom: 1px solid black;
+}
+
+.suggestedRow form {
+        display: flex;
+    align-items: center;
+    
+    
+    flex-wrap: wrap;
+}
+
+.suggestedRow form div {
+    margin: 0px 10px;
+    /* background-color: blue; */
+    display: flex;
+    /* flex-wrap: wrap; */
+    /* align-items: stretch; */
+}
+
+.suggestedRow form .packageActions a {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    outline: 0;
+    border: 0px;
+    background-color: white;
+    border-radius: 3px;
+    padding: 10px 15px;
+    display: block;
+    position: relative;
+    z-index: 100;
+    text-align: center;
+    font-size: 14px;
+    color: #c84e62;
+    -webkit-transition-duration: 0.25s;
+            transition-duration: 0.25s;
+    font-weight: 300;
+  }
+
+  .suggestedRow form a:hover {
+    background-color: #f5f7f9;
+    cursor: pointer;
+  }
+
+
+.suggestedRow div.packageName input {
+    margin: 0px;
+}
+
+.suggestedRow div.packageUrl {
+    
+}
+
+.suggestedRow div.packageInfo {
+    max-width: 300px;
+}
+
+.suggestedRow div.packageActions button, .suggestedRow div.packageActions a {
+    margin: 5px;
+    padding: 7px 15px;
+}
+
+
 /* Pure CSS Animated Background  https://codepen.io/mohaiman/pen/MQqMyo */
 
 @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
