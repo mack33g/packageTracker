@@ -39,7 +39,7 @@ app.get("/u/:userName", function(req, res) {
     (async function checkPackages() {
         var packages = [];
         let sql = `SELECT * FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active = 1`;
-        // suggestNewPackages(sanitize(req.params.userName));
+        suggestNewPackages(sanitize(req.params.userName));
         con.query(sql, (error, results, fields) => {
             if (error) {
                 return console.error(error.message);
@@ -57,14 +57,14 @@ app.get("/u/:userName", function(req, res) {
                 // console.log(packageResult); 
                 return packageResult;
             })).then(packageResults => {
-                console.log(packageResults);
+                // console.log(packageResults);
                 let sql = `SELECT COUNT (*) as numSuggestedPackages FROM packages WHERE userName = ${mysql.escape(req.params.userName)} AND active IS NULL`;
                 con.query(sql, (error, queryResults, fields) => {
                     if (error) {
                         return console.error(error.message);
                     }
                     let numSuggestedPackages = queryResults[0].numSuggestedPackages;
-                    console.log(numSuggestedPackages);
+                    // console.log(numSuggestedPackages);
                     // suggestedPackages = JSON.parse(JSON.stringify(suggestedPackages[0].trackingId));
                     // console.log(suggestedPackages);
                     res.render('results.ejs', {results: packageResults, userName: req.params.userName, numSuggestedPackages: numSuggestedPackages});
@@ -84,7 +84,7 @@ app.get("/u/:userName/suggestedPackages", function(req, res) {
         }
         // console.log(JSON.stringify(suggestedPackages));
         suggestedPackages = suggestedPackages.map(rowDataPacket => new TrackingInfo(rowDataPacket.trackingId));
-        console.log(suggestedPackages);
+        // console.log(suggestedPackages);
         // 
         res.render('suggestedPackages.ejs', {userName: req.params.userName, suggestedPackages: suggestedPackages});
     });
@@ -179,7 +179,7 @@ function identifyCarrier(trackingId) {
     carriers.forEach(carrier => {
         carrier.patterns.forEach(pattern => {
             var regex = new RegExp('^'+pattern+'$','i');
-            console.log(regex);
+            // console.log(regex);
             if (regex.test(trackingId)) {
                 carrierName = carrier.name;
             };
@@ -229,11 +229,11 @@ async function checkPackage(package, carrier) {
     const description = await page.$$eval(carrier.details.selector, (headers) => {
         return headers.map(header => {
             const text = header.innerText.trim();
-            console.log(text);
+            // console.log(text);
             return text;
         });
     });
-    console.log('\n');
+    // console.log('\n');
     // console.log(package.name);
     // console.log('Tracking ID: ' + package.trackingId);
     // console.log('status:');

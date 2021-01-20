@@ -58,7 +58,7 @@ let gmailResults = new Promise((resolve, reject) => {
     let sql = `INSERT INTO packages (userName, trackingId) VALUES ? ON DUPLICATE KEY UPDATE status = status`;
     let query = con.query(sql, [trackingValues], function(err) {
       if(err) throw err;
-      con.end();
+      // con.end();
     }) 
     // console.log(trackingValues);
     console.log(query.sql);
@@ -104,6 +104,11 @@ function returnTrackingNumbers(auth, callback) {
         if (emails && emails.length) {
           // using for... of because async doesn't work in foreach since the callback completes before each loop
           // returns. https://medium.com/@patarkf/synchronize-your-asynchronous-code-using-javascripts-async-await-5f3fa5b1366d
+          
+          fs.appendFile('parsedEmails', ("Email parsing on " + new Date(Date.now()).toUTCString() + "\n\n"), function(err) {
+            if(err) throw err;
+          });
+          
           for (let message of emails) {
             const messageDetails = await gmail.users.messages.get({
               userId: 'me',
@@ -113,15 +118,24 @@ function returnTrackingNumbers(auth, callback) {
             // snippet, headers.date, headers.from, headers.subject, textHtml, textPlain
             parsedMessage = parseMessage(messageDetails.data);
             
-            console.log("Email that matched gmail search: " + parsedMessage.headers.subject);
-            fs.appendFile('parsedEmails', (parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml), function(err) {
+            fs.appendFile('parsedEmails', ("Email that matched gmail search: " + parsedMessage.headers.subject + "\n\n"), function(err) {
               if(err) throw err;
             });
+            fs.appendFile('parsedEmails', (parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml + "\n\n"), function(err) {
+              if(err) throw err;
+            });
+            fs.appendFile('parsedEmails', ("******************\n\n\n"), function(err) {
+              if(err) throw err;
+            });
+
             const results = findTrackingNumber(parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml);
+            let messageBody = parsedMessage.textPlain ? parsedMessage.textPlain : parsedMessage.textHtml;
+            messageBody = messageBody.replace(/(<([^>]+)>)/gi, "");
             if (results.length) {
               trackingNumbers = trackingNumbers.concat(results);
-              // console.log(parsedMessage.headers.subject);
+              console.log(parsedMessage.headers.subject);
               console.log(results);
+              console.log(messageBody);
               // console.log(trackingNumbers);
             }
             // console.log("\n");
@@ -149,7 +163,7 @@ function findTrackingNumber(emailBody) {
             // Since most of the patterns start and end in a number, check to make sure that the matched
             // string isn't bookended by numbers - that way you don't end up finding multiple matches
             // e.g. if you're looking for 4 numbers, and there is an 8 digit string, you don't return 5 matches
-            const regex = new RegExp('\\D' + pattern + '\\D', 'gi');
+            const regex = new RegExp('\\D' + pattern + '\\D', 'g');
             // console.log(regex);
             // The search will return a positive match if the entire string is letters
             // But we know those aren't real tracking numbers so we exclude them.
