@@ -69,7 +69,7 @@ This email was sent from a notification-only address that cannot accept incoming
                         </div>
                         <div class="packageActions">
                             <button>Add</button>
-                            <a href="/u/<%= userName %>/rejectSuggestedPackage/<%= suggestedPackage.trackingId %>">✖️</a>
+                            <a href="/u/<%= userName %>/rejectSuggestedPackage/<%= encodeURIComponent(suggestedPackage.trackingId) %>">✖️</a>
                         </div>
                     </form>
                 </div>
