@@ -189,8 +189,9 @@ function identifyCarrier(trackingId) {
 }
 
 async function checkPackage(package, carrier) {
-    const browser = (appConfig.environment == 'mac') ? await playwright.chromium.launch({ 
+    const browser = (appConfig.environment == 'mac') ? await playwright.webkit.launch({ 
         // headless: false
+        // executablePath: '/usr/bin/chromium-browser' 
     }) : await playwright.chromium.launch({executablePath: '/usr/bin/chromium-browser' });
     const context = await browser.newContext(); 
     const page = await context.newPage();
